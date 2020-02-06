@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xsi:schemaLocation="http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+<!-- 빈 스캔 -->
+<context:component-scan base-package="springMybatis0204"></context:component-scan>
+
+<!-- 디비 정보 -->
+<context:property-placeholder location="classpath:config/dbinfo.properties"/>
+
+<!-- datasource 빈등록(디비 접속,커넥션풀도 해줌) -->
+<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+<!--  spring fram work에있는 드라이버 매니저 데이터 소스 -->
+
+<!-- 드라이버 클래스 이름 -->
+<property name="driverClassName" value="${db.driverClass}"></property>
+<!--db 접속 url -->
+<property name="url" value="${db.url}"></property>
+<!--  유저 아이디 -->
+<property name="username" value="${db.username}"></property>
+<!--  password -->
+<property name="password" value="${db.password}"></property>
+
+
+</bean>
+<!-- sqlsession factory bean 이용 -->
+<bean id="sqlSession" class="org.mybatis.spring.SqlSessionFactoryBean">
+	<!-- db 접속정보를 넣어줌 -->
+	<property name="dataSource" ref="dataSource"></property>
+	<!-- 마이바티스 설정정보를 넣어줌 -->
+	<property name="configLocation" value="classpath:config/mybatisConfig.xml"></property>
+</bean>
+ 
+<!-- 마이바티스 매퍼를 빈으로 등록하기 -->
+<mybatis-spring:scan base-package="spring.user.mapper"/>
+
+
+</beans>
